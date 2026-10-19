@@ -1,0 +1,296 @@
+{
+  "version": 1,
+  "sessionId": "642eaeee-44e0-4964-801e-5abb6f3a0502",
+  "profileId": "conservative",
+  "observedActions": [
+    {
+      "fingerprint": "a68da8777f83aaa67d8eb3b40f6464a3b1c6d99e",
+      "toolName": "ConfigChange",
+      "workItem": "ConfigChange source=skills file=C:\\Users\\Blue\\.claude\\commands\\pge-indicator.md",
+      "domainId": "auth_security_surfaces",
+      "domainLabel": "Auth / security surfaces",
+      "autonomyLevel": "HARD_STOP",
+      "operationType": "config_change",
+      "approvalState": "config_change_blocked",
+      "firstObservedAt": "2026-10-19T16:01:41.903Z",
+      "lastObservedAt": "2026-10-19T16:01:41.903Z"
+    }
+  ],
+  "blockedAttempts": [],
+  "chainEntries": [
+    {
+      "chainId": "hook_chain_642eaeee-44e0-4964-801e-5abb6f3a0502",
+      "entryId": "hook_config_change_642eaeee-44e0-4964-801e-5abb6f3a0502_0001",
+      "entryType": "OPERATOR_ACTION",
+      "recordedAt": "2026-10-19T16:01:41.903Z",
+      "sessionId": "642eaeee-44e0-4964-801e-5abb6f3a0502",
+      "sourceArtifact": "hook:ConfigChange",
+      "sourceLocation": "source:skills",
+      "payload": {
+        "action": "config_change_blocked",
+        "source": "skills",
+        "filePath": "C:\\Users\\Blue\\.claude\\commands\\pge-indicator.md"
+      },
+      "linkedEntryRefs": []
+    }
+  ],
+  "nextChainCounter": 2,
+  "activePermits": [],
+  "activeAuthorizations": [],
+  "loadedInstructions": [],
+  "activeSubagents": [],
+  "trackedTasks": [],
+  "stopGate": {
+    "lastBlockedSignature": null,
+    "lastBlockedAt": null
+  },
+  "subagentStopGate": {
+    "lastBlockedSignature": null,
+    "lastBlockedAt": null,
+    "lastAgentId": null
+  },
+  "persistedBrief": {
+    "briefId": "hook_brief_642eaeee-44e0-4964-801e-5abb6f3a0502",
+    "inScope": [],
+    "outOfScope": [],
+    "controlRodProfile": {
+      "profileId": "conservative",
+      "profileLabel": "Conservative",
+      "domainRules": [
+        {
+          "domainId": "pricing_quote_logic",
+          "label": "Pricing / quote logic",
+          "filePatterns": [
+            "**/*pricing*.*",
+            "**/*quote*.*"
+          ],
+          "operationTypes": [
+            "modify_logic",
+            "change_rules"
+          ],
+          "autonomyLevel": "HARD_STOP",
+          "justification": "Starter profile 'conservative' posture for Pricing / quote logic."
+        },
+        {
+          "domainId": "customer_data_pii",
+          "label": "Customer data / PII",
+          "filePatterns": [
+            "**/*customer*.*",
+            "**/*pii*.*"
+          ],
+          "operationTypes": [
+            "read_data",
+            "write_data"
+          ],
+          "autonomyLevel": "HARD_STOP",
+          "justification": "Starter profile 'conservative' posture for Customer data / PII."
+        },
+        {
+          "domainId": "database_schema",
+          "label": "Database schema",
+          "filePatterns": [
+            "**/*schema*.*",
+            "migrations/**"
+          ],
+          "operationTypes": [
+            "ddl_change",
+            "migration_change"
+          ],
+          "autonomyLevel": "HARD_STOP",
+          "justification": "Starter profile 'conservative' posture for Database schema."
+        },
+        {
+          "domainId": "protected_destructive_ops",
+          "label": "Protected / destructive ops",
+          "filePatterns": [
+            "**/*"
+          ],
+          "operationTypes": [
+            "delete",
+            "destructive_operation"
+          ],
+          "autonomyLevel": "HARD_STOP",
+          "justification": "Starter profile 'conservative' posture for Protected / destructive ops."
+        },
+        {
+          "domainId": "auth_security_surfaces",
+          "label": "Auth / security surfaces",
+          "filePatterns": [
+            "**/auth.*",
+            "**/auth-*.*",
+            "**/auth_*.*",
+            "**/*-auth.*",
+            "**/*_auth.*",
+            "**/*.auth.*",
+            "**/*oauth*.*",
+            "**/*authent*.*",
+            "**/*authoriz*.*",
+            "**/*authz*.*",
+            "**/*security*.*"
+          ],
+          "operationTypes": [
+            "auth_change",
+            "security_change"
+          ],
+          "autonomyLevel": "HARD_STOP",
+          "justification": "Starter profile 'conservative' posture for Auth / security surfaces."
+        },
+        {
+          "domainId": "existing_file_modification",
+          "label": "Existing file modification",
+          "filePatterns": [
+            "**/*"
+          ],
+          "operationTypes": [
+            "modify_existing_file"
+          ],
+          "autonomyLevel": "SUPERVISED",
+          "justification": "Starter profile 'conservative' posture for Existing file modification."
+        },
+        {
+          "domainId": "new_file_creation",
+          "label": "New file creation",
+          "filePatterns": [
+            "**/*"
+          ],
+          "operationTypes": [
+            "create_new_file"
+          ],
+          "autonomyLevel": "SUPERVISED",
+          "justification": "Starter profile 'conservative' posture for New file creation."
+        },
+        {
+          "domainId": "ui_styling_content",
+          "label": "UI / styling / content",
+          "filePatterns": [
+            "**/*ui*.*",
+            "**/*style*.*",
+            "**/*.css",
+            "**/*.html"
+          ],
+          "operationTypes": [
+            "ui_change",
+            "content_change"
+          ],
+          "autonomyLevel": "SUPERVISED",
+          "justification": "Starter profile 'conservative' posture for UI / styling / content."
+        },
+        {
+          "domainId": "documentation_comments",
+          "label": "Documentation / comments",
+          "filePatterns": [
+            "docs/**",
+            "**/*.md"
+          ],
+          "operationTypes": [
+            "documentation_change",
+            "comment_change"
+          ],
+          "autonomyLevel": "FULL_AUTO",
+          "justification": "Starter profile 'conservative' posture for Documentation / comments."
+        },
+        {
+          "domainId": "test_files",
+          "label": "Test files",
+          "filePatterns": [
+            "tests/**",
+            "**/*.test.*",
+            "**/*.spec.*"
+          ],
+          "operationTypes": [
+            "test_change",
+            "test_creation"
+          ],
+          "autonomyLevel": "SUPERVISED",
+          "justification": "Starter profile 'conservative' posture for Test files."
+        }
+      ]
+    },
+    "source": "hook_runtime",
+    "createdAt": "2026-10-19T16:00:54.722Z"
+  },
+  "persistedReceipt": {
+    "receiptId": "hook_receipt_642eaeee-44e0-4964-801e-5abb6f3a0502",
+    "completedWork": [],
+    "holdsRaised": [],
+    "source": "hook_runtime",
+    "createdAt": "2026-10-19T16:02:03.288Z"
+  },
+  "lastWalk": {
+    "evaluatedAt": "2026-10-19T16:26:07.541Z",
+    "findings": [],
+    "findingSummary": {
+      "VIOLATION": 0,
+      "PHANTOM": 0,
+      "GHOST": 0,
+      "DRIFT": 0,
+      "INCOMPLETE": 0,
+      "PARTIAL_VERIFICATION": 0,
+      "EVIDENCE_GAP": 0
+    },
+    "asBuilt": {
+      "sessionOfRecordRef": "hook_receipt_642eaeee-44e0-4964-801e-5abb6f3a0502",
+      "accountabilityDeltaOfRecord": "As-Built",
+      "items": [],
+      "statusCounts": {
+        "MATCHED": 0,
+        "MODIFIED": 0,
+        "ADDED": 0,
+        "DEFERRED": 0,
+        "HELD": 0
+      }
+    }
+  },
+  "lastFireBreak": {
+    "boardLabel": "Open Items Board",
+    "sessionId": "642eaeee-44e0-4964-801e-5abb6f3a0502",
+    "precedence": [
+      "Resolved this session",
+      "Aging into risk",
+      "Still unresolved",
+      "Missing now"
+    ],
+    "groups": {
+      "Missing now": [],
+      "Still unresolved": [],
+      "Aging into risk": [],
+      "Resolved this session": []
+    },
+    "source": "hook_runtime",
+    "projectionType": "hook_runtime_governance_health_snapshot",
+    "projectionNote": "Hook-derived governance-health snapshot for /fire-break; not canonical OpenItemsBoard.projectBoard output.",
+    "derivedAt": "2026-10-19T16:26:07.541Z"
+  },
+  "lastUserPromptSubmit": {
+    "promptPreview": "<pasted_content id=\"de82\">\nAZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID\nRESOURCE_GROUP, CONTAINER_ENVIRONMENT\nFRONTEND_APP, API_APP\nACR_NAME, ACR_SERVER, IMAGE_PREFIX\nRUNTIME_IDENTITY_ID, R",
+    "matchedPhrase": null,
+    "blocked": false,
+    "recordedAt": "2026-10-19T16:25:57.571Z"
+  },
+  "lastConfigChange": {
+    "source": "skills",
+    "filePath": "C:\\Users\\Blue\\.claude\\commands\\pge-indicator.md",
+    "decision": "block",
+    "observedAt": "2026-10-19T16:01:41.903Z"
+  },
+  "lastPermissionDenied": null,
+  "lastNotification": null,
+  "lastSubagentStop": null,
+  "lastTaskLifecycle": null,
+  "lastTeammateIdle": null,
+  "lastStopFailure": null,
+  "lastPostCompact": null,
+  "lastSessionEnd": null,
+  "lastElicitation": null,
+  "lastElicitationResult": null,
+  "sessionStart": {
+    "source": "startup",
+    "startedAt": "2026-10-19T16:00:54.722Z"
+  },
+  "recovery": {
+    "status": "not_required",
+    "detail": "No compaction recovery required for this startup source.",
+    "source": "startup",
+    "checkedAt": "2026-10-19T16:00:54.722Z"
+  }
+}

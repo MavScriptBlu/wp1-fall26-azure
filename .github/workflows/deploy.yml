@@ -57,13 +57,21 @@ jobs:
             state=$(az containerapp show -g "$RESOURCE_GROUP" -n "$app" --query properties.provisioningState -o tsv)
             latest=$(az containerapp show -g "$RESOURCE_GROUP" -n "$app" --query properties.latestRevisionName -o tsv)
             ready=$(az containerapp show -g "$RESOURCE_GROUP" -n "$app" --query properties.latestReadyRevisionName -o tsv)
-            if [ "$state" = Failed ]; then echo 'Azure provisioning failed'; exit 1; fi
+            echo "Attempt $attempt/60: app=$app state=$state latest=$latest ready=$ready"
+            if [ "$state" = Failed ]; then
+              echo 'Azure provisioning failed'
+              az containerapp revision list -g "$RESOURCE_GROUP" -n "$app" -o table
+              exit 1
+            fi
             if [ "$state" = Succeeded ] && [ -n "$latest" ] && [ "$latest" = "$ready" ]; then
               echo "Ready revision: $ready"
               exit 0
             fi
             sleep 10
           done
-          echo 'Revision did not become ready; inspect Container Apps logs.'
+          echo 'Revision did not become ready; inspecting Container Apps diagnostics.'
+          az containerapp revision list -g "$RESOURCE_GROUP" -n "$app" -o table
+          az containerapp logs show -g "$RESOURCE_GROUP" -n "$app" --type console --tail 50 || true
           exit 1
-      # Add application-specific HTTP tests and database checks; revision readiness is not functional testing.
+
+    # Add application-specific HTTP tests and database checks; revision readiness is not functional testing.

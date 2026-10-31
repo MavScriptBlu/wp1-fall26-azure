@@ -10,9 +10,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
+app.MapGet("/", () => Results.Ok(new { status = "healthy", service = "api" }));
 
 var summaries = new[]
 {

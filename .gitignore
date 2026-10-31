@@ -1,7 +1,81 @@
+# ==============================================================================
+# COURSE & PRIVATE CREDENTIALS (CRITICAL - DO NOT COMMIT)
+# ==============================================================================
+s[0-9][0-9]-*
 s06-app-connection.txt
 s06-github-variables.json
 s06-student-access.txt
 START_HERE.md
+*.zip
+*.dump
+*.backup
+
+# Environment & Secret files
+*.env
+*.env.*
+*.secret
+*.key
+*.pem
+*.pfx
+
+# ==============================================================================
+# .NET / C# BUILD & RUNTIME ARTIFACTS
+# ==============================================================================
+**/[Bb]in/
+**/[Oo]bj/
+**/[Pp]ublish/
+[Dd]ebug/
+[Rr]elease/
+
+# User-specific files & caches
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.dbmdl
+*.jfm
+TestResults/
+*.suo
+*.sln.docstates
+
+# Roslyn / Rider / Visual Studio cache
+.vs/
+.idea/
+*.DotSettings.user
+_ReSharper*/
+
+# ==============================================================================
+# LOGS & TEMPORARY FILES
+# ==============================================================================
+*.log
+*.tmp
+*.bak
+
+# ==============================================================================
+# DATABASE TOOLS (DBeaver, DataGrip, pg_dump)
+# ==============================================================================
+.dbeaver/
+.dbeaver-data/
+*.dump
+student_db.dump
+
+# ==============================================================================
+# OPERATING SYSTEM SPECIFIC
+# ==============================================================================
+# Windows
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ==============================================================================
+# AI ASSISTANT & LOCAL CACHE
+# ==============================================================================
 .claude
 .claude/*
 CLAUDE.md
@@ -9,14 +83,3 @@ CLAUDE.md
 .jules/*
 JULES.md
 .JULES
-
-*.log
-*.env
-*.secret
-*.key
-
-# .NET build output
-bin/
-obj/
-
-wp1-azure-s06 1.zip

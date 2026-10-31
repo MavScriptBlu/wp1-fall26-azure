@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS service_records (
+CREATE TABLE IF NOT EXISTS service_records(
     id SERIAL PRIMARY KEY,
     service_name VARCHAR(100) NOT NULL,
     environment VARCHAR(50) NOT NULL,

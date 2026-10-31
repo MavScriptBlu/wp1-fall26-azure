@@ -1,0 +1,132 @@
+version: '3'
+
+vars:
+  COMPOSE: 'podman compose -f compose.yaml'
+  API_URL: 'http://localhost:8080/api/services'
+  AZURE_HOST: 'psql-mstc-shared.postgres.database.azure.com'
+  AZURE_USER: 'cdev_f26_s06_app'
+  AZURE_DB: 'cdev_f26_s06'
+  AZURE_RESTORE_DB: 'cdev_f26_s06_restore_test'
+
+tasks:
+  default:
+    desc: 'List all available commands'
+    cmds:
+      - task --list
+
+  # ----------------------------------------------------------------------------
+  # Container Lifecycle
+  # ----------------------------------------------------------------------------
+
+  up-build:
+    desc: 'Build images and start all containers in detached mode'
+    cmds:
+      - '{{.COMPOSE}} up -d --build'
+
+  up:
+    desc: 'Start existing containers in detached mode'
+    cmds:
+      - '{{.COMPOSE}} up -d'
+
+  down:
+    desc: 'Stop and remove containers (preserves database volume)'
+    cmds:
+      - '{{.COMPOSE}} down'
+
+  restart:
+    desc: 'Restart the API container'
+    cmds:
+      - '{{.COMPOSE}} restart api'
+
+  ps:
+    desc: 'Show status of running containers'
+    cmds:
+      - '{{.COMPOSE}} ps'
+
+  # ----------------------------------------------------------------------------
+  # API Endpoints
+  # ----------------------------------------------------------------------------
+
+  post:
+    desc: 'Send sample service records to the API'
+    cmds:
+      - 'curl -s -X POST {{.API_URL}} -H "Content-Type: application/json" -d "{\"serviceName\": \"AuthMicroservice\", \"environment\": \"production\", \"status\": \"active\"}"'
+      - 'curl -s -X POST {{.API_URL}} -H "Content-Type: application/json" -d "{\"serviceName\": \"PaymentService\", \"environment\": \"production\", \"status\": \"active\"}"'
+
+  get:
+    desc: 'Query and list all service records from the API'
+    cmds:
+      - 'curl -s {{.API_URL}}'
+
+  # ----------------------------------------------------------------------------
+  # Logs & Diagnostics
+  # ----------------------------------------------------------------------------
+
+  logs:
+    desc: 'Follow live console logs from the API container'
+    cmds:
+      - '{{.COMPOSE}} logs -f api'
+
+  logs-tail:
+    desc: 'Print the last 50 lines of API container logs'
+    cmds:
+      - '{{.COMPOSE}} logs --tail 50 api'
+
+  break-db:
+    desc: 'Inject an invalid DB password to simulate an outage'
+    cmds:
+      - powershell -Command "(Get-Content api/appsettings.json) -replace 'localdevpassword123', 'wrongpassword_999' | Set-Content api/appsettings.json"
+      - '{{.COMPOSE}} restart api'
+      - echo "DB password set to wrongpassword_999 and API restarted. Run 'task post' then 'task logs-tail'."
+
+  fix-db:
+    desc: 'Restore the valid DB password and recover the API'
+    cmds:
+      - powershell -Command "(Get-Content api/appsettings.json) -replace 'wrongpassword_999', 'localdevpassword123' | Set-Content api/appsettings.json"
+      - '{{.COMPOSE}} restart api'
+      - echo "DB password restored and API restarted."
+
+  # ----------------------------------------------------------------------------
+  # Database & Performance
+  # ----------------------------------------------------------------------------
+
+  migrate:
+    desc: 'Apply init-schema.sql to the local database'
+    cmds:
+      - '{{.COMPOSE}} exec db psql -U postgres -d student_db -f /docker-entrypoint-initdb.d/01-init.sql'
+
+  migrate-azure:
+    desc: 'Apply init-schema.sql to your live Azure PostgreSQL database'
+    cmds:
+      - 'psql -h {{.AZURE_HOST}} -U {{.AZURE_USER}} -d {{.AZURE_DB}} -f init-schema.sql'
+
+  psql:
+    desc: 'Open an interactive psql session in the database container'
+    cmds:
+      - '{{.COMPOSE}} exec -it db psql -U postgres -d student_db'
+
+  explain:
+    desc: 'Run EXPLAIN ANALYZE on the environment query'
+    cmds:
+      - >-
+        {{.COMPOSE}} exec db psql -U postgres -d student_db -c "EXPLAIN ANALYZE SELECT * FROM service_records WHERE environment = 'production';"
+
+  # ----------------------------------------------------------------------------
+  # Disaster Recovery
+  # ----------------------------------------------------------------------------
+
+  backup:
+    desc: 'Export a logical backup from Azure PostgreSQL (pg_dump)'
+    cmds:
+      - 'pg_dump -h {{.AZURE_HOST}} -U {{.AZURE_USER}} -d {{.AZURE_DB}} -Fc -O -x -v -f student_db.dump'
+
+  restore:
+    desc: 'Restore backup archive into the isolated test database (pg_restore)'
+    cmds:
+      - 'pg_restore -h {{.AZURE_HOST}} -U {{.AZURE_USER}} -d {{.AZURE_RESTORE_DB}} -c --if-exists -O -x -1 -v student_db.dump'
+
+  verify:
+    desc: 'Print the SQL checksum verification query'
+    cmds:
+      - echo "Run this query in Azure psql / Query Editor:"
+      - echo "SELECT 'live_db' AS source, COUNT(*) AS total_rows, md5(string_agg(id::text || service_name, ',' ORDER BY id)) AS data_checksum FROM service_records UNION ALL SELECT 'restored_test_db' AS source, COUNT(*) AS total_rows, md5(string_agg(id::text || service_name, ',' ORDER BY id)) AS data_checksum FROM cdev_f26_s06_restore_test.service_records;"

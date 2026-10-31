@@ -2,3 +2,21 @@ s06-app-connection.txt
 s06-github-variables.json
 s06-student-access.txt
 START_HERE.md
+.claude
+.claude/*
+CLAUDE.md
+.jules
+.jules/*
+JULES.md
+.JULES
+
+*.log
+*.env
+*.secret
+*.key
+
+# .NET build output
+bin/
+obj/
+
+wp1-azure-s06 1.zip

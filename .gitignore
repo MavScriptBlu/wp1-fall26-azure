@@ -78,7 +78,10 @@ $RECYCLE.BIN/
 # ==============================================================================
 .claude
 .claude/*
+.claude/
 CLAUDE.md
+.claudeignore
+.claude/data/healthcare/documents/
 .jules
 .jules/*
 JULES.md

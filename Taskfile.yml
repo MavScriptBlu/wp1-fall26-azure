@@ -132,3 +132,37 @@ tasks:
     cmds:
       - echo "Run this query in Azure psql / Query Editor:"
       - echo "SELECT 'live_db' AS source, COUNT(*) AS total_rows, md5(string_agg(id::text || service_name, ',' ORDER BY id)) AS data_checksum FROM service_records UNION ALL SELECT 'restored_test_db' AS source, COUNT(*) AS total_rows, md5(string_agg(id::text || service_name, ',' ORDER BY id)) AS data_checksum FROM cdev_f26_s06_restore_test.service_records;"
+
+  # ----------------------------------------------------------------------------
+  # Assignment Evidence (Local PostgreSQL)
+  # ----------------------------------------------------------------------------
+
+  evidence-logs:
+    desc: '#3 - Show successful transaction log from API'
+    cmds:
+      - '{{.COMPOSE}} logs --tail 30 api'
+
+  evidence-explain:
+    desc: '#4 - Run EXPLAIN ANALYZE on service_records'
+    cmds:
+      - '{{.COMPOSE}} exec db psql -U postgres -d student_db -c "EXPLAIN ANALYZE SELECT * FROM service_records;"'
+
+  evidence-backup:
+    desc: '#5 - Create pg_dump backup'
+    cmds:
+      - '{{.COMPOSE}} exec db pg_dump -U postgres -d student_db -F c -f /tmp/backup.dump'
+      - '{{.COMPOSE}} exec db ls -la /tmp/backup.dump'
+
+  evidence-restore:
+    desc: '#5 - Restore backup to test database'
+    cmds:
+      - '{{.COMPOSE}} exec db psql -U postgres -c "DROP DATABASE IF EXISTS student_db_restored;"'
+      - '{{.COMPOSE}} exec db psql -U postgres -c "CREATE DATABASE student_db_restored;"'
+      - '{{.COMPOSE}} exec db pg_restore -U postgres -d student_db_restored /tmp/backup.dump'
+      - echo "Restore completed"
+
+  evidence-verify:
+    desc: '#5 - Verify backup matches original (row count + MD5)'
+    cmds:
+      - '{{.COMPOSE}} exec db psql -U postgres -d student_db -c "SELECT ''Original'' as source, COUNT(*) as row_count, MD5(STRING_AGG(id::text || service_name || environment || status, '','' ORDER BY id)) as data_hash FROM service_records;"'
+      - '{{.COMPOSE}} exec db psql -U postgres -d student_db_restored -c "SELECT ''Restored'' as source, COUNT(*) as row_count, MD5(STRING_AGG(id::text || service_name || environment || status, '','' ORDER BY id)) as data_hash FROM service_records;"'

@@ -76,15 +76,17 @@ tasks:
     desc: 'Inject an invalid DB password to simulate an outage'
     cmds:
       - powershell -Command "(Get-Content api/appsettings.json) -replace 'localdevpassword123', 'wrongpassword_999' | Set-Content api/appsettings.json"
-      - '{{.COMPOSE}} restart api'
-      - echo "DB password set to wrongpassword_999 and API restarted. Run 'task post' then 'task logs-tail'."
+      - powershell -Command "(Get-Content compose.yaml) -replace 'Database__Password=localdevpassword123', 'Database__Password=wrongpassword_999' | Set-Content compose.yaml"
+      - '{{.COMPOSE}} up -d api'
+      - echo "DB password set to wrongpassword_999 and API container restarted with bad credentials. Run 'task post' then 'task logs-tail'."
 
   fix-db:
     desc: 'Restore the valid DB password and recover the API'
     cmds:
       - powershell -Command "(Get-Content api/appsettings.json) -replace 'wrongpassword_999', 'localdevpassword123' | Set-Content api/appsettings.json"
-      - '{{.COMPOSE}} restart api'
-      - echo "DB password restored and API restarted."
+      - powershell -Command "(Get-Content compose.yaml) -replace 'Database__Password=wrongpassword_999', 'Database__Password=localdevpassword123' | Set-Content compose.yaml"
+      - '{{.COMPOSE}} up -d api'
+      - echo "DB password restored and API container updated."
 
   # ----------------------------------------------------------------------------
   # Database & Performance
